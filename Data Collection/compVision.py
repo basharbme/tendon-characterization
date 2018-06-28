@@ -89,6 +89,7 @@ def getLength( argv ):
                 center2 = ( x2+(h2/2) , y2+(w2/2) )
 
         		# only proceed if the rectangles meet a minimum size
+                '''May need to adjust sizes in if statement based on experimental setup'''
                 if h1>5 and h2>5 and w1<30 and w2<30 and h1<20 and h2<20:
         			# draw the rectangles and centroids on the frame
                     cv.rectangle( ROI, (int(x1),int(y1)), (int(x1+h1),int(y1+w1)), (0, 255, 0), 1 )
