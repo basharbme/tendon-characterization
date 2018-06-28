@@ -8,13 +8,21 @@ import cv2 as cv
 import sys
 import csv
 
+# This method does nothing. It just needs to be passed to the createTrackbar()
+# method in getLength()
 def nothing(x):
     pass
 
 
+# Takes in initial measured length between the markers given as a command line
+# argument. Creates a video capture frame, detects the two blue markers,
+# calculates the distance between the markers in each frame, and returns a list
+# of the lengths. Starts calculating lengths when the toggle switch at the top
+# of the window is turned on (set to 1). Video capture ends when q is pressed.
+# Returns a list of the collected lengths.
 def getLength( argv ):
 
-    '''Check if initial tendon length (mm) given as command line argument'''
+    '''Check if initial tendon length (mm)'''
     if len(argv) < 2:
         print 'usage: %s <length in mm>' % (argv[0])
         exit()
@@ -121,6 +129,9 @@ def getLength( argv ):
     return lengths
 
 
+# Takes in a CSV filename as a command line argument. Assumes the data is in
+# the form produced by the Force Gage, where the first row is the column headers
+# and the forces are in the second column. Returns a list of the forces.
 def getForce( argv ):
 
     '''Check if given filename'''
@@ -132,7 +143,6 @@ def getForce( argv ):
     file = open( argv[1], 'rU' )
     rows = csv.reader(file)
 
-    # assumes data is taken from ForceGage output file (forces in 2nd column)
     for row in rows[1:]:
         forces.append( float(row[1]) )
     file.close()
