@@ -1,7 +1,6 @@
 # Riley Karp
 # C3PO
 # Created 6/25/2018
-# Last Modified 6/28/2018
 # compVision.py
 
 import numpy as np
@@ -141,49 +140,6 @@ def getForce( argv ):
     return forces
 
 
-def getBW():
-    cap = cv.VideoCapture(0) # capture video
-
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if ret == True:
-            # set ROI to middle 200 pixels
-            height = frame.shape[0]
-            width = frame.shape[1]
-            ROI = frame[ (height/2)-200:(height/2)+200 , (width/2)-100:(width/2)+100 ]
-
-            # alter frames
-            gray = cv.cvtColor(ROI, cv.COLOR_BGR2GRAY)
-            blurred = cv.GaussianBlur(gray,(5,5),0)
-            # ret,globTh = cv.threshold(blurred,191,255,cv.THRESH_BINARY)
-            gaussTh = cv.adaptiveThreshold(blurred,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY,11,2)
-            ret2, otsuTh = cv.threshold(blurred,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU)
-
-            # add ROI to frame
-            gaussColor = cv.cvtColor(gaussTh, cv.COLOR_GRAY2BGR)
-            frame[ (height/2)-200:(height/2)+200 , (width/2)-100 : (width/2)+100, : ] = gaussColor
-
-            # gaussTh[ : , 0 : (width/2)-100 ] = gray[ : , 0 : (width/2)-100 ]
-            # gaussTh[ : , (width/2)+100 : width ] = gray[ : , (width/2)+100 : width ]
-
-            #display frames
-            # cv.imshow('global thresh',globTh)
-            cv.imshow('gauss thresh',gaussTh)
-            cv.imshow('otsu thresh',otsuTh)
-            # cv.imshow('gray',gray)
-            cv.imshow('original', frame)
-
-
-            if cv.waitKey(1) & 0xFF == ord('q'):
-                break
-        else:
-            break
-
-    cap.release()
-    cv.destroyAllWindows()
-
-
 if __name__ == '__main__':
     getLength( sys.argv )
     # getForce( sys.argv )
-    # getBW()
