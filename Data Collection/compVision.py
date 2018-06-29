@@ -14,23 +14,17 @@ def nothing(x):
     pass
 
 
-# Takes in initial measured length between the markers given as a command line
-# argument. Creates a video capture frame, detects the two blue markers,
+# Takes in initial measured length between the markers
+# Creates a video capture frame, detects the two blue markers,
 # calculates the distance between the markers in each frame, and returns a list
 # of the lengths. Starts calculating lengths when the toggle switch at the top
 # of the window is turned on (set to 1). Video capture ends when q is pressed.
 # Returns a list of the collected lengths.
-def getLength( argv ):
-
-    '''Check if initial tendon length (mm)'''
-    if len(argv) < 2:
-        print 'usage: %s <length in mm>' % (argv[0])
-        exit()
-
+def getLength( measured_length ):
 
     '''Initialize video capture and intial lengths'''
     cap = cv.VideoCapture(0)
-    len0 = float( argv[1] ) #original length in mm
+    len0 = float(measured_length) #original length in mm
     dist0 = None #original pixel distance
     lengths = []
 
@@ -79,7 +73,6 @@ def getLength( argv ):
                 conts.sort(key=cv.contourArea)
                 box1 = conts[-1]
                 box2 = conts[-2]
-                # print cv.contourArea(box1), cv.contourArea(box2)
 
                 # create bounding rectangles and centroids
                 x1,y1,h1,w1 = cv.boundingRect(box1)
@@ -102,12 +95,17 @@ def getLength( argv ):
                 '''Find the vertical distance between the 2 markers'''
                 on = cv.getTrackbarPos(switch,'original')
                 if on == 1:
-                    pix = abs(center1[1] - center2[1])
+                    # find the pixel distance between the inner edges of the 2 rectangles
+                    pix = abs( max(y1,y2) - min(y1+w1,y2+w2) )
+
+                    # instantiate dist0 if it's the first measurement frame
                     if dist0 == None:
                         dist0 = pix
+
+                    # calculate actual length using initial measured lengths
                     length = pix * len0 / dist0
                     print length
-                    # only record length if it's greater than starting length
+                    # only record length if it's greater than the starting length
                     # this accounts for some noise
                     if length > (len0-1):
                         lengths.append(length)
@@ -133,15 +131,10 @@ def getLength( argv ):
 # Takes in a CSV filename as a command line argument. Assumes the data is in
 # the form produced by the Force Gage, where the first row is the column headers
 # and the forces are in the second column. Returns a list of the forces.
-def getForce( argv ):
-
-    '''Check if given filename'''
-    if len(argv) < 2:
-        print 'usage: %s <filename>' % (argv[0])
-        exit()
+def getForce( filename ):
 
     forces = []
-    file = open( argv[1], 'rU' )
+    file = open( filename, 'rU' )
     rows = csv.reader(file)
 
     for row in rows[1:]:
@@ -151,6 +144,15 @@ def getForce( argv ):
     return forces
 
 
+# Takes in a list of data and returns a list of the average value at each plateau
+def getPlateaus( data ):
+    plats = []
+
+    # loop through data to find plateaus & averages
+
+    return plats
+
+
 if __name__ == '__main__':
-    getLength( sys.argv )
-    # getForce( sys.argv )
+    getLength( sys.argv[1] )
+    # getForce( sys.argv[1] )

@@ -17,13 +17,14 @@ FORCE COLLECTION
   - Click Start button
   - Stretch tendon, waiting for ____sec at each plateau
   - Click Stop if you want to end data collection before it reaches 5000 data points
-* Export to Excel. Save as CSV file for use with compVision.py
+* Export to Excel. Save as CSV file for use with driver.py
 * Use getForce() method in compVision.py to return a list of the force values.
+  - Run driver.py with command line arguments 'force' and the CSV filename with the force data
 
 LENGTH COLLECTION
 * Use the getLength() method in compVision.py to return a list of length values.
-* Give the initial measured length as a command line argument.
-* Position the tendon in the colored rectangle in the center of the screen.
-* Toggle the switch at the top of the Window to 1 (towards the right side)
+  - Run driver.py with command line arguments 'length' and initial measured length.
+  - Position the tendon in the colored rectangle in the center of the screen.
+  - Toggle the switch at the top of the Window to 1 (towards the right side)
   to start recording length values.
-* Press q to quit the program.
+  - Press q to quit the program.
