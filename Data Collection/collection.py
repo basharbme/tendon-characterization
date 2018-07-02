@@ -1,12 +1,11 @@
 # Riley Karp
 # C3PO
 # Created 6/25/2018
-# compVision.py
+# collection.py
 
 import numpy as np
 import cv2 as cv
 import sys
-import csv
 
 # This method does nothing. It just needs to be passed to the createTrackbar()
 # method in getLength()
@@ -128,31 +127,5 @@ def getLength( measured_length ):
     return lengths
 
 
-# Takes in a CSV filename as a command line argument. Assumes the data is in
-# the form produced by the Force Gage, where the first row is the column headers
-# and the forces are in the second column. Returns a list of the forces.
-def getForce( filename ):
-
-    forces = []
-    file = open( filename, 'rU' )
-    rows = csv.reader(file)
-
-    for row in rows[1:]:
-        forces.append( float(row[1]) )
-    file.close()
-
-    return forces
-
-
-# Takes in a list of data and returns a list of the average value at each plateau
-def getPlateaus( data ):
-    plats = []
-
-    # loop through data to find plateaus & averages
-
-    return plats
-
-
 if __name__ == '__main__':
     getLength( sys.argv[1] )
-    # getForce( sys.argv[1] )

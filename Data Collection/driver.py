@@ -3,7 +3,8 @@
 # Created 6/29/2018
 # driver.py
 
-import compVision
+import collection
+import analysis
 import sys
 
 def main( argv ):
