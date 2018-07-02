@@ -15,9 +15,9 @@ def main( argv ):
         exit()
 
     if argv[1] == 'length':
-        return compVision.getLength(argv[2])
+        return collection.getLength(argv[2])
     elif argv[1] == 'force':
-        return compVision.getForce(argv[2])
+        return collection.getForce(argv[2])
     else:
         print 'usage: %s <length or force> <length in mm or filename' % (argv[0])
 

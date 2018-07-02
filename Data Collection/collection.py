@@ -6,6 +6,7 @@
 import numpy as np
 import cv2 as cv
 import sys
+import csv
 
 # This method does nothing. It just needs to be passed to the createTrackbar()
 # method in getLength()
@@ -125,6 +126,21 @@ def getLength( measured_length ):
     cv.destroyAllWindows()
 
     return lengths
+
+# Takes in a CSV filename as a command line argument. Assumes the data is in
+# the form produced by the Force Gage, where the first row is the column headers
+# and the forces are in the second column. Returns a list of the forces.
+def getForce( filename ):
+
+    forces = []
+    file = open( filename, 'rU' )
+    rows = csv.reader(file)
+    next(rows,None)
+    for row in rows:
+        forces.append( float(row[1]) )
+    file.close()
+
+    return forces
 
 
 if __name__ == '__main__':

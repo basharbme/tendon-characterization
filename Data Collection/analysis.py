@@ -3,26 +3,9 @@
 # Created 7/2/2018
 # analysis.py
 
-import numpy as np
 import sys
-import csv
-# import matplotlib.pyplot as plt
-
-
-# Takes in a CSV filename as a command line argument. Assumes the data is in
-# the form produced by the Force Gage, where the first row is the column headers
-# and the forces are in the second column. Returns a list of the forces.
-def getForce( filename ):
-
-    forces = []
-    file = open( filename, 'rU' )
-    rows = csv.reader(file)
-    next(rows,None)
-    for row in rows:
-        forces.append( float(row[1]) )
-    file.close()
-
-    return forces
+import matplotlib.pyplot as plt
+import collection
 
 
 # Takes in a list of data and returns a list of the average value at each plateau
@@ -43,14 +26,20 @@ def getPlateaus( data ):
 
     return plats
 
+
 # Takes in 2 lists of data (independent (x) & dependent (y) variables) and plots them
 def plotData( x, y ):
-    pass
+    if len(x) != len(y):
+        print 'Inputs are not equal lengths. X has length ', len(x) , \
+        ' and Y has length ' , len(y)
+        return
+    plt.plot(x,y, 'bo')
+    plt.show()
 
 
 if __name__ == '__main__':
-    # getLength( sys.argv[1] )
-    # getForce( sys.argv[1] )
-    plats = getPlateaus( getForce(sys.argv[1]) )
+    plats = getPlateaus( collection.getForce(sys.argv[1]) )
     print plats
     print len(plats)
+
+    plotData([1,2,3,4,5],[1,2,3,4,5])
