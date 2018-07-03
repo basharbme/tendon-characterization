@@ -18,13 +18,15 @@ def nothing(x):
 # Creates a video capture frame, detects the two blue markers,
 # calculates the distance between the markers in each frame, and returns a list
 # of the lengths. Starts calculating lengths when the toggle switch at the top
-# of the window is turned on (set to 1). Video capture ends when q is pressed.
+# of the window is turned on (set to 1). Video capture ends when 'q' is pressed.
+# When 's' is pressed, saves the lengths as a CSV file with filename given as
+# raw input in command line, then ends the program.
 # Returns a list of the collected lengths.
 def getLength( measured_length ):
 
     '''Initialize video capture and intial lengths'''
     cap = cv.VideoCapture(0)
-    len0 = float(measured_length) #original length in mm
+    len0 = float(measured_length) #original length in cm
     dist0 = None #original pixel distance
     lengths = []
 
@@ -119,6 +121,10 @@ def getLength( measured_length ):
             '''Quit if q is pressed'''
             if cv.waitKey(1) & 0xFF == ord('q'):
                 break
+            elif cv.waitKey(1) & 0xFF == ord('s'):
+                filename = raw_input('Save lengths as: ')
+                save(lengths, filename)
+                break
         else:
             break
 
@@ -126,6 +132,18 @@ def getLength( measured_length ):
     cv.destroyAllWindows()
 
     return lengths
+
+
+# Takes in a list of data and a filename string and saves the data as a CSV file
+# with the given filename.
+def save( data, filename ):
+    file = filename + '.csv'
+    f = open( file, 'wb' )
+    writer = csv.writer( f, delimiter=',', quoting=csv.QUOTE_MINIMAL )
+    for x in data:
+        writer.writerow([x])
+    f.close()
+
 
 # Takes in a CSV filename as a command line argument. Assumes the data is in
 # the form produced by the Force Gage, where the first row is the column headers
@@ -137,7 +155,7 @@ def getForce( filename ):
     rows = csv.reader(file)
     next(rows,None)
     for row in rows:
-        forces.append( float(row[1]) )
+        forces.append( float(row[1])*-1 )
     file.close()
 
     return forces

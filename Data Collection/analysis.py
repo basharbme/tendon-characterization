@@ -27,19 +27,25 @@ def getPlateaus( data ):
     return plats
 
 
-# Takes in 2 lists of data (independent (x) & dependent (y) variables) and plots them
-def plotData( x, y ):
-    if len(x) != len(y):
-        print 'Inputs are not equal lengths. X has length ', len(x) , \
-        ' and Y has length ' , len(y)
-        return
-    plt.plot(x,y, 'bo')
+# Takes in 2 lists of data (independent & dependent variables) and plots them
+# if only one list is given, it is plotted as the dependent variable with index
+# as independent variable.
+def plotData( dep, indep = [] ):
+    if indep == []:
+        plt.plot(dep, 'bo')
+    else:
+        if len(indep) != len(dep):
+            print 'Inputs are not equal lengths. X has length ', len(indep) , \
+            ' and Y has length ' , len(dep)
+            return
+        plt.plot(indep, dep, 'bo')
     plt.show()
 
 
 if __name__ == '__main__':
-    plats = getPlateaus( collection.getForce(sys.argv[1]) )
+    forces = collection.getForce(sys.argv[1])
+    plats = getPlateaus( forces )
     print plats
     print len(plats)
 
-    plotData([1,2,3,4,5],[1,2,3,4,5])
+    plotData(forces)

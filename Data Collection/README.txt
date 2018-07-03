@@ -1,5 +1,5 @@
 Data Collection Instructions
-6/28/2018
+7/3/2018
 
 SETUP
 * Put 2 pieces of blue chroma tape on the tendon & measure the length between them.
@@ -15,16 +15,14 @@ FORCE COLLECTION
   - No. of Readings = 5000 (max)
 * Acquisition:
   - Click Start button
-  - Stretch tendon, waiting for ____sec at each plateau
+  - Stretch tendon, waiting for __(TBD)__ sec at each plateau
   - Click Stop if you want to end data collection before it reaches 5000 data points
 * Export to Excel. Save as CSV file for use with driver.py
-* Use getForce() method in collection.py to return a list of the force values.
-  - Run driver.py with command line arguments 'force' and the CSV filename with the force data
 
 LENGTH COLLECTION
-* Use the getLength() method in collection.py to return a list of length values.
-  - Run driver.py with command line arguments 'length' and initial measured length.
+* Run driver.py to use the getLength() method in collection.py to return a list of length values.
   - Position the tendon in the colored rectangle in the center of the screen.
   - Toggle the switch at the top of the Window to 1 (towards the right side)
   to start recording length values.
   - Press q to quit the program.
+  - Press s to save lengths and quit the program.
