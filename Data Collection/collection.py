@@ -145,10 +145,10 @@ def save( data, filename ):
     f.close()
 
 
-# Takes in a CSV filename as a command line argument. Assumes the data is in
-# the form produced by the Force Gage, where the first row is the column headers
-# and the forces are in the second column. Returns a list of the forces.
-def getForce( filename ):
+# Takes in a CSV filename. Assumes the data is in the form produced by the
+# Force Gage, where the first row is the column headers and the forces are in
+# the second column. Returns a list of the forces.
+def readForce( filename ):
 
     forces = []
     file = open( filename, 'rU' )
@@ -159,6 +159,21 @@ def getForce( filename ):
     file.close()
 
     return forces
+
+
+# Takes in a CSV filename. Assumes the data is in the form produced by the
+# getLength method, where the file only contains one column of lengths
+# Returns a list of the lengths.
+def readLength( filename ):
+
+    lengths = []
+    file = open( filename, 'rU' )
+    rows = csv.reader(file)
+    for row in rows:
+        lengths.append( float(row[0]) )
+    file.close()
+
+    return lengths
 
 
 if __name__ == '__main__':

@@ -11,18 +11,52 @@ import collection
 # Takes in a list of data and returns a list of the average value at each plateau
 def getPlateaus( data ):
     plats = []
-    start = 0
-    end = 99
+    high = 1
+    cur_plateau = False
 
-    while end < len(data):
-        avg = sum( data[start:end] )/len( data[start:end] )
-        close = [ ( abs(avg-x) < 0.2 ) for x in data[start:end] ]
-        if all(close):
-            plats.append(avg)
-            start = end + 1
-            end += 100
-        end += 1
-        start += 1
+    # loop through all points
+    while high < len(data):
+        # calculate slope between two consecutive points
+        slope = abs( data[high] - data[high-1] )
+        # print slope
+        # if slope is flat enough, that is a plateau
+        if slope <= 0.2 and cur_plateau == False:
+            low = high-1
+            cur_plateau = True
+        # if slope becomes too large, plateau ends. find and record plateau average.
+        elif slope > 0.2 and cur_plateau == True and (high-low) > 100:
+            avg = sum( data[low:high-1] )/len( data[low:high-1] )
+
+            print avg
+
+            # check if current plateau is too similar to last plateau (accounts for noise)
+            if len(plats) > 0 and abs(avg - plats[-1]) < 0.3:
+
+                print avg,plats[-1]
+
+                avg = (avg + plats[-1])/2
+                plats[-1] = avg
+            else:
+                plats.append(avg)
+            cur_plateau = False
+            low = high
+
+        # increment end index
+        high += 1
+
+
+    # start = 0
+    # end = 99
+    #
+    # while end < len(data):
+    #     avg = sum( data[start:end] )/len( data[start:end] )
+    #     close = [ ( abs(avg-x) < 0.2 ) for x in data[start:end] ]
+    #     if all(close):
+    #         plats.append(avg)
+    #         start = end + 1
+    #         end += 100
+    #     end += 1
+    #     start += 1
 
     return plats
 
@@ -43,7 +77,7 @@ def plotData( dep, indep = [] ):
 
 
 if __name__ == '__main__':
-    forces = collection.getForce(sys.argv[1])
+    forces = collection.readLength(sys.argv[1])
     plats = getPlateaus( forces )
     print plats
     print len(plats)
