@@ -6,58 +6,38 @@
 import sys
 import matplotlib.pyplot as plt
 import collection
+import numpy as np
 
 
-# Takes in a list of data and returns a list of the average value at each plateau
+# Takes in a list of data and returns a list of the median value at each plateau
 def getPlateaus( data ):
+
     plats = []
-    high = 1
-    cur_plateau = False
+    lenPlat = 30 # num pts corresponding to last 3sec of plateau
+    # force: 10 pts/sec = 30 pts in 3sec , length: ____ pts/secs
 
     # loop through all points
-    while high < len(data):
-        # calculate slope between two consecutive points
-        slope = abs( data[high] - data[high-1] )
+    # for idx in range(1,len(data)):
+    #     # calculate magnitude of the slope between two consecutive points
+    #     slope = abs( data[idx] - data[idx-1] )
+    #     # if slope is too steep, calc median of plateau before it
+    #     if (slope > 0.2) or (idx == ( len(data)-1 )):
+    #         median = np.median( data[idx-lenPlat : idx] )
+    #         print median
+    #         plats.append(median)
+
+    idx = 1
+    while idx < len(data):
+        slope = abs( data[idx] - data[idx-1] )
+        while slope < 0.5 and idx < len(data):
+            slope = abs( data[idx] - data[idx-1] )
+            idx += 1
+            # print slope
         # print slope
-        # if slope is flat enough, that is a plateau
-        if slope <= 0.2 and cur_plateau == False:
-            low = high-1
-            cur_plateau = True
-        # if slope becomes too large, plateau ends. find and record plateau average.
-        elif slope > 0.2 and cur_plateau == True and (high-low) > 100:
-            avg = sum( data[low:high-1] )/len( data[low:high-1] )
-
-            print avg
-
-            # check if current plateau is too similar to last plateau (accounts for noise)
-            if len(plats) > 0 and abs(avg - plats[-1]) < 0.3:
-
-                print avg,plats[-1]
-
-                avg = (avg + plats[-1])/2
-                plats[-1] = avg
-            else:
-                plats.append(avg)
-            cur_plateau = False
-            low = high
-
-        # increment end index
-        high += 1
-
-
-    # start = 0
-    # end = 99
-    #
-    # while end < len(data):
-    #     avg = sum( data[start:end] )/len( data[start:end] )
-    #     close = [ ( abs(avg-x) < 0.2 ) for x in data[start:end] ]
-    #     if all(close):
-    #         plats.append(avg)
-    #         start = end + 1
-    #         end += 100
-    #     end += 1
-    #     start += 1
-
+        median = np.median( data[idx-lenPlat : idx] )
+        if median not in plats:
+            plats.append(median)
+        idx += 1
     return plats
 
 
