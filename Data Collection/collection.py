@@ -138,7 +138,7 @@ def getLength( measured_length ):
 # with the given filename.
 def save( data, filename ):
     file = filename + '.csv'
-    f = open( file, 'wb' )
+    f = open( '../Data/'+file, 'wb' )
     writer = csv.writer( f, delimiter=',', quoting=csv.QUOTE_MINIMAL )
     for x in data:
         writer.writerow([x])
@@ -151,7 +151,7 @@ def save( data, filename ):
 def readForce( filename ):
 
     forces = []
-    file = open( filename, 'rU' )
+    file = open( '../Data/'+filename, 'rU' )
     rows = csv.reader(file)
     next(rows,None)
     for row in rows:
@@ -167,7 +167,7 @@ def readForce( filename ):
 def readLength( filename ):
 
     lengths = []
-    file = open( filename, 'rU' )
+    file = open( '../Data/'+filename, 'rU' )
     rows = csv.reader(file)
     for row in rows:
         lengths.append( float(row[0]) )

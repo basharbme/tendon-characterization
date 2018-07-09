@@ -8,36 +8,45 @@ import matplotlib.pyplot as plt
 import collection
 import numpy as np
 
-
-# Takes in a list of data and returns a list of the median value at each plateau
-def getPlateaus( data ):
+# length getPlateaus
+def getLengthPlateaus( data ):
 
     plats = []
     lenPlat = 30 # num pts corresponding to last 3sec of plateau
-    # force: 10 pts/sec = 30 pts in 3sec , length: ____ pts/secs
+    # length: ____ pts/sec
 
     # loop through all points
-    # for idx in range(1,len(data)):
-    #     # calculate magnitude of the slope between two consecutive points
-    #     slope = abs( data[idx] - data[idx-1] )
-    #     # if slope is too steep, calc median of plateau before it
-    #     if (slope > 0.2) or (idx == ( len(data)-1 )):
-    #         median = np.median( data[idx-lenPlat : idx] )
-    #         print median
-    #         plats.append(median)
+    for idx in range(2,len(data)):
+        # calculate magnitude of the slope between two consecutive points
+        slope = abs( data[idx] - data[idx-2] )
+        # if slope is too steep, calc median of plateau before it
+        if (slope > 0.2) or (idx == ( len(data)-1 )):
+            median = np.median( data[idx-lenPlat : idx] )
 
-    idx = 1
-    while idx < len(data):
+            if len(plats) > 0 and abs(median - plats[-1]) < 0.2:
+                plats[-1] = abs(median+plats[-1])/2
+            else:
+                plats.append(median)
+    return plats
+
+
+# Takes in a list of data and returns a list of the median value at each plateau
+def getForcePlateaus( data ):
+
+    plats = []
+    lenPlat = 30 # num pts corresponding to last 3sec of plateau
+    # force: 10 pts/sec = 30 pts in 3sec
+
+    # loop through all points
+    for idx in range(1,len(data)):
+        # calculate magnitude of the slope between two consecutive points
         slope = abs( data[idx] - data[idx-1] )
-        while slope < 0.5 and idx < len(data):
-            slope = abs( data[idx] - data[idx-1] )
-            idx += 1
-            # print slope
-        # print slope
-        median = np.median( data[idx-lenPlat : idx] )
-        if median not in plats:
+        # if slope is too steep, calc median of plateau before it
+        if (slope > 0.5) or (idx == ( len(data)-1 )):
+            median = np.median( data[idx-lenPlat : idx] )
+            print median
             plats.append(median)
-        idx += 1
+
     return plats
 
 
@@ -57,9 +66,13 @@ def plotData( dep, indep = [] ):
 
 
 if __name__ == '__main__':
-    forces = collection.readLength(sys.argv[1])
-    plats = getPlateaus( forces )
+    # data = collection.readForce(sys.argv[1])
+    # plats = getForcePlateaus( data )
+
+    data = collection.readLength(sys.argv[1])
+    plats = getLengthPlateaus( data )
+
     print plats
     print len(plats)
 
-    plotData(forces)
+    plotData(data)
