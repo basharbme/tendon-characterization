@@ -13,20 +13,25 @@ def getLengthPlateaus( data ):
 
     plats = []
     lenPlat = 30 # num pts corresponding to last 3sec of plateau
-    # length: ____ pts/sec
+    # length: 10 pts/sec
 
-    # loop through all points
-    for idx in range(2,len(data)):
-        # calculate magnitude of the slope between two consecutive points
-        slope = abs( data[idx] - data[idx-2] )
-        # if slope is too steep, calc median of plateau before it
-        if (slope > 0.2) or (idx == ( len(data)-1 )):
+    # loop through the points to find plateaus
+    idx = 30
+    while idx < len(data):
+        # calculate difference between points
+        dif = abs( data[idx] - data[idx-30] )
+        # if dif is too large, calc median of plateau before it
+        if (dif > 0.02) or (idx == ( len(data)-1 )):
             median = np.median( data[idx-lenPlat : idx] )
 
             if len(plats) > 0 and abs(median - plats[-1]) < 0.2:
                 plats[-1] = abs(median+plats[-1])/2
             else:
                 plats.append(median)
+            idx += 30
+        else:
+            idx += 1
+
     return plats
 
 
@@ -66,11 +71,14 @@ def plotData( dep, indep = [] ):
 
 
 if __name__ == '__main__':
-    # data = collection.readForce(sys.argv[1])
-    # plats = getForcePlateaus( data )
+    filename = sys.argv[1]
 
-    data = collection.readLength(sys.argv[1])
-    plats = getLengthPlateaus( data )
+    if 'force' in filename:
+        data = collection.readForce(filename)
+        plats = getForcePlateaus( data )
+    else:
+        data = collection.readLength(filename)
+        plats = getLengthPlateaus( data )
 
     print plats
     print len(plats)

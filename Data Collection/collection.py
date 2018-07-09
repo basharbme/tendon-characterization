@@ -7,6 +7,7 @@ import numpy as np
 import cv2 as cv
 import sys
 import csv
+import time
 
 # This method does nothing. It just needs to be passed to the createTrackbar()
 # method in getLength()
@@ -29,6 +30,8 @@ def getLength( measured_length ):
     len0 = float(measured_length) #original length in cm
     dist0 = None #original pixel distance
     lengths = []
+    # t0 = 0
+    # times = []
 
 
     '''Create Toggle Switch To Record Length'''
@@ -83,9 +86,12 @@ def getLength( measured_length ):
                 center1 = ( x1+(h1/2) , y1+(w1/2) )
                 center2 = ( x2+(h2/2) , y2+(w2/2) )
 
+
         		# only proceed if the rectangles meet a minimum size
-                '''May need to adjust sizes in if statement based on experimental setup'''
-                if h1>5 and h2>5 and w1<30 and w2<30 and h1<20 and h2<20:
+                '''May need to adjust sizes in if statement based on experimental setup.
+                Adjust by printing h1,h2,w1,w2 to find desired contour sizes.'''
+                # print h1,h2,w1,w2
+                if h1>25 and h2>25 and w1>8 and w2>8:
         			# draw the rectangles and centroids on the frame
                     cv.rectangle( ROI, (int(x1),int(y1)), (int(x1+h1),int(y1+w1)), (0, 255, 0), 1 )
                     cv.circle( ROI, center1, 5, (0, 0, 255), -1)
@@ -113,6 +119,12 @@ def getLength( measured_length ):
                         lengths.append(length)
 
 
+            # curTime = time.time()*1000
+            # dif = curTime - t0
+            # t0 = curTime
+            # times.append(dif)
+            # print dif
+
             '''Display frames'''
             cv.imshow('mask',mask)
             cv.imshow('original', frame)
@@ -130,6 +142,9 @@ def getLength( measured_length ):
 
     cap.release()
     cv.destroyAllWindows()
+
+    # times = times[1:]
+    # print 'max: ' , max(times) , ', min: ' , min(times) , ', avg: ' , sum(times)/len(times)
 
     return lengths
 
