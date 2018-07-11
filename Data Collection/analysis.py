@@ -24,6 +24,8 @@ def getLengthPlateaus( data ):
         if (dif > 0.02) or (idx == ( len(data)-1 )):
             median = np.median( data[idx-lenPlat : idx] )
 
+            # if plateau is found more than once (2 consecutive plateaus are
+            # close in value), then average the values found
             if len(plats) > 0 and abs(median - plats[-1]) < 0.2:
                 plats[-1] = abs(median+plats[-1])/2
             else:
@@ -42,16 +44,29 @@ def getForcePlateaus( data ):
     lenPlat = 30 # num pts corresponding to last 3sec of plateau
     # force: 10 pts/sec = 30 pts in 3sec
 
+    s = []
+    step = 4
     # loop through all points
-    for idx in range(1,len(data)):
+    idx = step
+    while idx < len(data):
         # calculate magnitude of the slope between two consecutive points
-        slope = abs( data[idx] - data[idx-1] )
+        slope = abs( data[idx] - data[idx-step] )/step
+        s.append(slope)
         # if slope is too steep, calc median of plateau before it
-        if (slope > 0.5) or (idx == ( len(data)-1 )):
+        if (slope > 0.75) or (idx == ( len(data)-1 )):
             median = np.median( data[idx-lenPlat : idx] )
-            print median
-            plats.append(median)
 
+            # if plateau is found more than once (2 consecutive plateaus are
+            # close in value), then average the values found
+            if len(plats) > 0 and abs(median - plats[-1]) < ( max(data)*0.05 ):
+                plats[-1] = abs(median+plats[-1])/2
+            else:
+                plats.append(median)
+            idx +=20
+
+        else:
+            idx += 1
+    print s, max(s)
     return plats
 
 
