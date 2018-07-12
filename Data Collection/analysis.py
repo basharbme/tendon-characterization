@@ -7,6 +7,7 @@ import sys
 import matplotlib.pyplot as plt
 import collection
 import numpy as np
+from scipy import stats
 
 # length getPlateaus
 def getLengthPlateaus( data ):
@@ -80,7 +81,14 @@ def plotData( dep, indep=[], xlabel='Length (cm)', ylabel='Force (N)', title = '
             print 'Inputs are not equal lengths. X has length ', len(indep) , \
             ' and Y has length ' , len(dep)
             return
-        plt.plot(indep, dep, 'bo')
+        plt.plot(indep, dep, 'bo', label='original data')
+
+        # Linear regreession
+        m, b, r, p, stde = stats.linregress(indep,dep)
+        print 'Lin reg: y = ', m , 'x + ', b
+        print 'R-squared: ', r**2
+        plt.plot(indep, b + m*np.array(indep), 'r', label='linear fit')
+        plt.legend()
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
