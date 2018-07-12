@@ -51,7 +51,6 @@ def getForcePlateaus( data ):
     while idx < len(data):
         # calculate magnitude of the slope between two consecutive points
         slope = abs( data[idx] - data[idx-step] )/step
-        s.append(slope)
         # if slope is too steep, calc median of plateau before it
         if (slope > 0.75) or (idx == ( len(data)-1 )):
             median = np.median( data[idx-lenPlat : idx] )
@@ -66,36 +65,70 @@ def getForcePlateaus( data ):
 
         else:
             idx += 1
-    print s, max(s)
     return plats
 
 
 # Takes in 2 lists of data (independent & dependent variables) and plots them
 # if only one list is given, it is plotted as the dependent variable with index
 # as independent variable.
-def plotData( dep, indep = [] ):
+def plotData( dep, indep=[], xlabel='Length (cm)', ylabel='Force (N)', title = 'Force vs. Length' ):
     if indep == []:
         plt.plot(dep, 'bo')
+        xlabel = 'Reading Number'
     else:
         if len(indep) != len(dep):
             print 'Inputs are not equal lengths. X has length ', len(indep) , \
             ' and Y has length ' , len(dep)
             return
         plt.plot(indep, dep, 'bo')
+
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.show()
+
+
+def subplots( force, length ):
+    plt.subplot(2,1,1)
+    plt.plot(force, 'bo')
+    plt.xlabel('Reading #')
+    plt.ylabel('Force (N)')
+    plt.title('Force & Length vs. Reading #')
+
+    plt.subplot(2,1,2)
+    plt.plot(length, 'bo')
+    plt.xlabel('Reading #')
+    plt.ylabel('Length (cm)')
+
     plt.show()
 
 
 if __name__ == '__main__':
-    filename = sys.argv[1]
+    if len(sys.argv) == 2:
+        filename = sys.argv[1]
 
-    if 'force' in filename:
-        data = collection.readForce(filename)
-        plats = getForcePlateaus( data )
-    else:
-        data = collection.readLength(filename)
-        plats = getLengthPlateaus( data )
+        if 'force' in filename:
+            data = collection.readForce(filename)
+            plats = getForcePlateaus( data )
+            print plats
+            print len(plats)
+            plotData(data)
 
-    print plats
-    print len(plats)
+        elif 'length' in filename:
+            data = collection.readLength(filename)
+            plats = getLengthPlateaus( data )
+            print plats
+            print len(plats)
+            plotData(data)
 
-    plotData(data)
+        else:
+            force = collection.readForce(filename + '_force.csv')
+            length = collection.readLength(filename + '_length.csv')
+
+            fplats = getForcePlateaus( force )
+            lplats = getLengthPlateaus( length )
+
+            print 'force plats: ', fplats, len(fplats)
+            print 'length plats: ', lplats, len(lplats)
+
+            subplots(force,length)
