@@ -45,7 +45,6 @@ def getForcePlateaus( data ):
     lenPlat = 30 # num pts corresponding to last 3sec of plateau
     # force: 10 pts/sec = 30 pts in 3sec
 
-    s = []
     step = 4
     # loop through all points
     idx = step
@@ -53,7 +52,7 @@ def getForcePlateaus( data ):
         # calculate magnitude of the slope between two consecutive points
         slope = abs( data[idx] - data[idx-step] )/step
         # if slope is too steep, calc median of plateau before it
-        if (slope > 0.75) or (idx == ( len(data)-1 )):
+        if (slope > 0.25) or (idx == ( len(data)-1 )):
             median = np.median( data[idx-lenPlat : idx] )
 
             # if plateau is found more than once (2 consecutive plateaus are
@@ -73,22 +72,28 @@ def getForcePlateaus( data ):
 # if only one list is given, it is plotted as the dependent variable with index
 # as independent variable.
 def plotData( dep, indep=[], xlabel='Length (cm)', ylabel='Force (N)', title = 'Force vs. Length' ):
+    # if only one list of data is given, plot that data vs. index
     if indep == []:
         plt.plot(dep, 'bo')
         xlabel = 'Reading Number'
+    # if 2 lists of data are given, plot dep vs. indep
     else:
+        # if lists are unequal lengths, print error message and return
         if len(indep) != len(dep):
             print 'Inputs are not equal lengths. X has length ', len(indep) , \
             ' and Y has length ' , len(dep)
             return
-        plt.plot(indep, dep, 'bo', label='original data')
+        # plot stretch pts in blue & relaxation in yellow
+        peak = dep.index(max(dep))
+        plt.plot(indep[:peak], dep[:peak], 'bo', label='stretch')
+        plt.plot(indep[peak:], dep[peak:], 'yo', label='relaxation')
 
         # Linear regreession
         m, b, r, p, stde = stats.linregress(indep,dep)
         print 'Lin reg: y = ', m , 'x + ', b
         print 'R-squared: ', r**2
         plt.plot(indep, b + m*np.array(indep), 'r', label='linear fit')
-        plt.legend()
+        plt.legend(loc=2)
 
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -109,6 +114,12 @@ def subplots( force, length ):
     plt.ylabel('Length (cm)')
 
     plt.show()
+
+
+# Takes in filament stiffness, k, in N/cm and length in cm. Returns E in N/m = Pa
+def elastic_mod(k,length):
+    # E = k*length/area
+    return (k*length*100*100) / (3.14159265358979*0.175*0.175)
 
 
 if __name__ == '__main__':

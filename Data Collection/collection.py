@@ -57,8 +57,8 @@ def getLength( measured_length ):
             frame[ (height/2)-200:(height/2)+200 , (width/2)-100:(width/2)+100 ] = hsv
 
             # HSV Thresholds
-            lower_blue_tape = np.array([105,0,0])
-            upper_blue_tape = np.array([125,255,255])
+            lower_blue_tape = np.array([110,20,20])
+            upper_blue_tape = np.array([120,235,235])
 
             # create mask & remove noise
             mask = cv.inRange(hsv, lower_blue_tape, upper_blue_tape)
@@ -91,7 +91,8 @@ def getLength( measured_length ):
                 '''May need to adjust sizes in if statement based on experimental setup.
                 Adjust by printing h1,h2,w1,w2 to find desired contour sizes.'''
                 # print h1,h2,w1,w2
-                if h1>25 and h2>25 and w1>8 and w2>8:
+                # if h1>25 and h2>25 and w1>8 and w2>8: # sheet tendon size
+                if 5<h1<18 and 5<h2<18 and 5<w1<18 and 5<w2<18: # filament size
         			# draw the rectangles and centroids on the frame
                     cv.rectangle( ROI, (int(x1),int(y1)), (int(x1+h1),int(y1+w1)), (0, 255, 0), 1 )
                     cv.circle( ROI, center1, 5, (0, 0, 255), -1)
@@ -151,12 +152,15 @@ def getLength( measured_length ):
 
 # Takes in a list of data and a filename string and saves the data as a CSV file
 # with the given filename.
-def save( data, filename ):
+def save( data, filename, plats = False ):
     file = filename + '.csv'
     f = open( '../Data/'+file, 'wb' )
     writer = csv.writer( f, delimiter=',', quoting=csv.QUOTE_MINIMAL )
     for x in data:
-        writer.writerow([x])
+        if plats: # writing force & length plateaus to a file
+            writer.writerow(x)
+        else: # writing raw length data points to a file
+            writer.writerow([x])
     f.close()
 
 
