@@ -92,7 +92,9 @@ def getLength( measured_length ):
                 Adjust by printing h1,h2,w1,w2 to find desired contour sizes.'''
                 # print h1,h2,w1,w2
                 # if h1>25 and h2>25 and w1>8 and w2>8: # sheet tendon size
-                if 5<h1<18 and 5<h2<18 and 5<w1<18 and 5<w2<18: # filament size
+                if 20<h1<50 and 20<h2<50 and 15<w1<30 and 15<w2<30: # ribbon clamp size
+                # if 5<h1<18 and 5<h2<18 and 5<w1<18 and 5<w2<18: # filament size
+                # if 5<h1<20 and 5<h2<20 and 5<w1<20 and 5<w2<20: # wedge grip size
         			# draw the rectangles and centroids on the frame
                     cv.rectangle( ROI, (int(x1),int(y1)), (int(x1+h1),int(y1+w1)), (0, 255, 0), 1 )
                     cv.circle( ROI, center1, 5, (0, 0, 255), -1)

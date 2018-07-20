@@ -27,7 +27,7 @@ def getLengthPlateaus( data ):
 
             # if plateau is found more than once (2 consecutive plateaus are
             # close in value), then average the values found
-            if len(plats) > 0 and abs(median - plats[-1]) < 0.2:
+            if len(plats) > 0 and abs(median - plats[-1]) < 0.5:
                 plats[-1] = abs(median+plats[-1])/2
             else:
                 plats.append(median)
@@ -52,12 +52,13 @@ def getForcePlateaus( data ):
         # calculate magnitude of the slope between two consecutive points
         slope = abs( data[idx] - data[idx-step] )/step
         # if slope is too steep, calc median of plateau before it
-        if (slope > 0.25) or (idx == ( len(data)-1 )):
+        '''May have to change slope threshold [0.2,0.75]'''
+        if (slope > 0.75) or (idx == ( len(data)-1 )):
             median = np.median( data[idx-lenPlat : idx] )
 
             # if plateau is found more than once (2 consecutive plateaus are
             # close in value), then average the values found
-            if len(plats) > 0 and abs(median - plats[-1]) < ( max(data)*0.05 ):
+            if len(plats) > 0 and abs(median - plats[-1]) < ( max(data)*0.04 ):
                 plats[-1] = abs(median+plats[-1])/2
             else:
                 plats.append(median)
@@ -115,11 +116,13 @@ def subplots( force, length ):
 
     plt.show()
 
-
-# Takes in filament stiffness, k, in N/cm and length in cm. Returns E in N/m = Pa
-def elastic_mod(k,length):
-    # E = k*length/area
-    return (k*length*100*100) / (3.14159265358979*0.175*0.175)
+def integrate( force, length ):
+    integral = 0
+    for i in range( len(force)-1 ):
+        rect = min(force[i],force[i+1]) * abs(length[i]-length[i+1])
+        tri = abs(force[i]-force[i+1]) * abs(length[i]-length[i+1]) * 0.5
+        integral += ( rect + tri )
+    return integral
 
 
 if __name__ == '__main__':
