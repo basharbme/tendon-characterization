@@ -25,9 +25,12 @@ def readPlats( filename ):
 
 
 def getWork( forces, lengths ):
+    # len_stretch, len_relax, force_stretch, force_relax = analysis.getStretchRelax(lengths, forces)
+    # stretch = analysis.integrate(force_stretch,len_stretch)
+    # relax = analysis.integrate(force_relax,len_relax)
     peak = forces.index(max(forces))
     stretch = analysis.integrate(forces[:peak+1],lengths[:peak+1])
-    relax = analysis.integrate(forces[peak:],lengths[peak:])
+    relax = analysis.integrate(forces[peak:]+[forces[0]],lengths[peak:]+[lengths[0]])
     return stretch, relax
 
 

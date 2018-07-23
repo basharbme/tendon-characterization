@@ -8,6 +8,7 @@ import cv2 as cv
 import sys
 import csv
 import time
+import random
 
 # This method does nothing. It just needs to be passed to the createTrackbar()
 # method in getLength()
@@ -197,5 +198,15 @@ def readLength( filename ):
     return lengths
 
 
+def randLengths( min ):
+    lens = [min]
+    while len(lens) < 11:
+        new = random.randrange(min, int(min+(0.6*min)),1)
+        if new != lens[-1]:
+            lens.append( new )
+    return lens
+
+
 if __name__ == '__main__':
+    print randLengths( int(float(sys.argv[1])) )
     getLength( sys.argv[1] )

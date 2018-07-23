@@ -58,7 +58,7 @@ def getForcePlateaus( data ):
 
             # if plateau is found more than once (2 consecutive plateaus are
             # close in value), then average the values found
-            if len(plats) > 0 and abs(median - plats[-1]) < ( max(data)*0.04 ):
+            if len(plats) > 0 and abs(median - plats[-1]) < ( max(data)*0.02 ):
                 plats[-1] = abs(median+plats[-1])/2
             else:
                 plats.append(median)
@@ -85,9 +85,11 @@ def plotData( dep, indep=[], xlabel='Length (cm)', ylabel='Force (N)', title = '
             ' and Y has length ' , len(dep)
             return
         # plot stretch pts in blue & relaxation in yellow
-        peak = dep.index(max(dep))
-        plt.plot(indep[:peak], dep[:peak], 'bo', label='stretch')
-        plt.plot(indep[peak:], dep[peak:], 'yo', label='relaxation')
+        indep_stretch, indep_relax, dep_stretch, dep_relax = getStretchRelax(indep,dep)
+
+        # peak = dep.index(max(dep))
+        plt.plot(indep_stretch, dep_stretch, 'bo', label='stretch')
+        plt.plot(indep_relax, dep_relax, 'yo', label='relaxation')
 
         # Linear regreession
         m, b, r, p, stde = stats.linregress(indep,dep)
@@ -100,6 +102,24 @@ def plotData( dep, indep=[], xlabel='Length (cm)', ylabel='Force (N)', title = '
     plt.ylabel(ylabel)
     plt.title(title)
     plt.show()
+
+
+def getStretchRelax( indep, dep ):
+    indep_stretch = [ indep[0] ]
+    indep_relax = []
+    dep_stretch = [ dep [0] ]
+    dep_relax = []
+    for i in range(1,len(dep)):
+        if indep[i-1] < indep[i]:
+            indep_stretch.append( indep[i] )
+        else:
+            indep_relax.append( indep[i] )
+
+        if dep[i-1] < dep[i]:
+            dep_stretch.append( dep[i] )
+        else:
+            dep_relax.append( dep[i] )
+    return indep_stretch, indep_relax, dep_stretch, dep_relax
 
 
 def subplots( force, length ):
@@ -116,13 +136,14 @@ def subplots( force, length ):
 
     plt.show()
 
+
 def integrate( force, length ):
     integral = 0
     for i in range( len(force)-1 ):
         rect = min(force[i],force[i+1]) * abs(length[i]-length[i+1])
         tri = abs(force[i]-force[i+1]) * abs(length[i]-length[i+1]) * 0.5
         integral += ( rect + tri )
-    return integral
+    return integral/100
 
 
 if __name__ == '__main__':
