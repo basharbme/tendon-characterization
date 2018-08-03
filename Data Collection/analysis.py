@@ -31,7 +31,7 @@ def getLengthPlateaus( data ):
                 plats[-1] = abs(median+plats[-1])/2
             else:
                 plats.append(median)
-            idx += 40
+            idx += 30
         else:
             idx += 1
 
@@ -62,7 +62,7 @@ def getForcePlateaus( data ):
                 plats[-1] = abs(median+plats[-1])/2
             else:
                 plats.append(median)
-            idx +=30
+            idx += 35
 
         else:
             idx += 1
@@ -171,7 +171,8 @@ if __name__ == '__main__':
             fplats = getForcePlateaus( force )
             lplats = getLengthPlateaus( length )
 
-            print 'force plats: ', fplats, len(fplats)
-            print 'length plats: ', lplats, len(lplats)
+            print 'Force Plats: (', len(fplats), ') ' , fplats
+            print
+            print 'Length Plats: (', len(lplats), ') ' , lplats
 
             subplots(force,length)
