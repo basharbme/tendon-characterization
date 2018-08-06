@@ -138,7 +138,7 @@ def getLength( measured_length ):
             if cv.waitKey(1) & 0xFF == ord('q'):
                 break
             elif cv.waitKey(1) & 0xFF == ord('s'):
-                filename = raw_input('Save lengths as: ')
+                filename = raw_input('Type tendon serial number here: ')
                 save(lengths, filename+'_length')
                 break
         else:

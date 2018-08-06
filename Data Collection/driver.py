@@ -25,9 +25,6 @@ def readPlats( filename ):
 
 
 def getWork( forces, lengths ):
-    # len_stretch, len_relax, force_stretch, force_relax = analysis.getStretchRelax(lengths, forces)
-    # stretch = analysis.integrate(force_stretch,len_stretch)
-    # relax = analysis.integrate(force_relax,len_relax)
     peak = forces.index(max(forces))
     stretch = analysis.integrate(forces[:peak+1],lengths[:peak+1])
     relax = analysis.integrate(forces[peak:]+[forces[0]],lengths[peak:]+[lengths[0]])
@@ -76,6 +73,5 @@ def elastic_mod(k,length,area):
 
 
 if __name__ == '__main__':
-  # print 'E: '  , elastic_mod(25.167,9.5,0.2*2.54) , ' MPa'
   forces,lengths = getPlats(sys.argv)
   main( forces,lengths )
