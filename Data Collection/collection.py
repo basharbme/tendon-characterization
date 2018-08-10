@@ -118,8 +118,9 @@ def getLength( measured_length ):
                     length = pix * len0 / dist0
                     print length
                     # only record length if it's greater than the starting length
-                    # this accounts for some noise
-                    if length > (len0-1):
+                    # and less than 16cm (max is usually no higher than ~14.5cm)
+                    # these bounds account for some noise
+                    if (len0-1) < length < 16:
                         lengths.append(length)
 
 
@@ -177,7 +178,8 @@ def readForce( filename ):
     rows = csv.reader(file)
     next(rows,None)
     for row in rows:
-        forces.append( float(row[1])*-1 )
+        if row[1] != '':
+            forces.append( float(row[1])*-1 )
     file.close()
 
     return forces

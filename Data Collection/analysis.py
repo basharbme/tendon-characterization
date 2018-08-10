@@ -13,7 +13,7 @@ from scipy import stats
 def getLengthPlateaus( data ):
 
     plats = []
-    lenPlat = 30 # num pts corresponding to last 3sec of plateau
+    lenPlat = 10 # num pts corresponding to last 3sec of plateau
     # length: 10 pts/sec
 
     # loop through the points to find plateaus
@@ -31,7 +31,7 @@ def getLengthPlateaus( data ):
                 plats[-1] = abs(median+plats[-1])/2
             else:
                 plats.append(median)
-            idx += 30
+            idx += 35
         else:
             idx += 1
 
@@ -62,7 +62,7 @@ def getForcePlateaus( data ):
                 plats[-1] = abs(median+plats[-1])/2
             else:
                 plats.append(median)
-            idx += 35
+            idx += 40
 
         else:
             idx += 1

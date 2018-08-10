@@ -51,8 +51,17 @@ def getPlats( argv ):
         force_plats = analysis.getForcePlateaus(forces)
 
         plats = [ ['Force','Length'] ]
-        for i in range(len(force_plats)):
-            plats.append( [force_plats[i], length_plats[i]] )
+        for i in range( max( len(force_plats),len(length_plats) ) ):
+            if i >= len(force_plats):
+                force = 0
+            else:
+                force = force_plats[i]
+            if i >= len(length_plats):
+                length = 0
+            else:
+                length = length_plats[i]
+
+            plats.append( [force, length] )
         collection.save(plats, argv[1] + '_plats', plats = True)
 
     return force_plats,length_plats
