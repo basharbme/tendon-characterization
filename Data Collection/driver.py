@@ -10,12 +10,15 @@ import csv
 import os.path
 
 
+# Reads the force and length plateau values from the given CSV file with
+# forces in the first column and lengths in the second.
+# Returns lists of the force and length plateau values.
 def readPlats( filename ):
     force_plats = []
     length_plats = []
     file = open( filename, 'rU' )
     rows = csv.reader(file)
-    next(rows,None)
+    next(rows,None) # skip first row with column headers
     for row in rows:
         force_plats.append( float(row[0]) )
         length_plats.append( float(row[1]) )
@@ -24,6 +27,8 @@ def readPlats( filename ):
     return force_plats,length_plats
 
 
+# Takes in lists of force and length plateau values.
+# Calculates and returns two floats that are the work required to stretch and relax the tendon.
 def getWork( forces, lengths ):
     peak = forces.index(max(forces))
     stretch = analysis.integrate(forces[:peak+1],lengths[:peak+1])
@@ -31,17 +36,25 @@ def getWork( forces, lengths ):
     return stretch, relax
 
 
-# read force & length csv files, find and save plateaus as csv & plot force v. length
-def getPlats( argv ):
+# Takes one command line argument, which is assumed to be the tendon serial number.
+# Reads force and lentgh plateaus from 'serialNumber_plats.csv' file if it exists.
+# Otherwise, reads raw force and length data and calculates plateaus using methods
+# from analysis.py, and saves plateaus in a file named 'serialNumber_plats.csv'.
+# Calculates and prints work required to stretch and relax tendon, and its efficiency.
+# (work data is only accurate for work loop. not when tendon was tested at random lengths)
+# Plots force vs. length using plotData() method from analysis.py
+def main( argv ):
     '''Check if given cmd line args'''
     if len(argv) < 2:
-        print 'usage: %s <filename>' % (argv[0])
+        print 'usage: %s <serial number>' % (argv[0])
         exit()
 
+    # Read plateaus from file if it exists
     if os.path.isfile('../Data/' + argv[1] + '_plats.csv'):
         print 'reading'
         force_plats,length_plats = readPlats('../Data/' + argv[1] + '_plats.csv')
 
+    # Calculate plateaus from raw data if plateau file doesn't already exist
     else:
         print 'calculating'
         lengths = collection.readLength(argv[1] + '_length.csv')
@@ -62,16 +75,18 @@ def getPlats( argv ):
                 length = length_plats[i]
 
             plats.append( [force, length] )
+
+        # save plateaus to CSV file named 'serialNumber_plats.csv'
         collection.save(plats, argv[1] + '_plats', plats = True)
 
-    return force_plats,length_plats
 
-
-def main( force_plats, length_plats ):
+    # calculate and print work data (only accurate for work loop, not random lengths)
     stretch, relax = getWork(force_plats,length_plats)
     print 'Stretch: ' , stretch , 'J'
     print 'Relax: ' , relax , 'J'
     print 'Efficiency: ' , (relax/stretch)*100 , '%'
+
+    # plot force vs. length. Slope of line is tendon stiffness
     analysis.plotData(force_plats,length_plats)
 
 
@@ -82,5 +97,4 @@ def elastic_mod(k,length,area):
 
 
 if __name__ == '__main__':
-  forces,lengths = getPlats(sys.argv)
-  main( forces,lengths )
+  main( sys.argv )

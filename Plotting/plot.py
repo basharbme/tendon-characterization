@@ -112,21 +112,21 @@ def plotData( indep,dep, data ):
     m1, b1, r1, p1, std1 = stats.linregress(lin1[0],lin1[1])
     # string in the form 'y = ax + b, R^2 = _'
     eqn1 = 'y = ' + str( round(m1,3) ) + 'x + ' + str( round(b1,3) ) + ' , R^2 = ' + str( round(r1**2,3) )
-    plt.plot(lin1[0], b1 + m1*np.array(lin1[0]), 'r', label='1mm: '+ eqn1)
+    # plt.plot(lin1[0], b1 + m1*np.array(lin1[0]), 'r', label='1mm: '+ eqn1)
 
 
     # 2mm linear regression line
     m2, b2, r2, p2, std2 = stats.linregress(lin2[0],lin2[1])
     # string in the form 'y = ax + b, R^2 = _'
     eqn2 = 'y = ' + str( round(m2,3) ) + 'x + ' + str( round(b2,3) ) + ' , R^2 = ' + str( round(r2**2,3) )
-    plt.plot(lin2[0], b2 + m2*np.array(lin2[0]), 'g', label='2mm: ' + eqn2)
+    # plt.plot(lin2[0], b2 + m2*np.array(lin2[0]), 'g', label='2mm: ' + eqn2)
 
 
     # 3mm linear regression line
     m3, b3, r3, p3, std3 = stats.linregress(lin3[0],lin3[1])
     # string in the form 'y = ax + b, R^2 = _'
     eqn3 = 'y = ' + str( round(m3,3) ) + 'x + ' + str( round(b3,3) ) + ' , R^2 = ' + str( round(r3**2,3) )
-    plt.plot(lin3[0], b3 + m3*np.array(lin3[0]), 'b', label='3mm: ' + eqn3)
+    # plt.plot(lin3[0], b3 + m3*np.array(lin3[0]), 'b', label='3mm: ' + eqn3)
 
 
     # overall linear regression line
@@ -148,7 +148,7 @@ def plotData( indep,dep, data ):
         str( round(poly[2],3) ) + ', R^2: ' +str(round(R2,3))
     # plot quadratic regression curve
     t = np.linspace(min(data[indep]),max(data[indep]),500)
-    # plt.plot(t,p(t),'-',color='black',label=polyeq)
+    plt.plot(t,p(t),'-',color='black',label=polyeq)
 
     # print equations
     print '\n--------------- Linear Regression Equations ----------------'
