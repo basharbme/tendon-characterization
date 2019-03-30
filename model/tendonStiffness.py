@@ -42,9 +42,9 @@ def responseSurface( e=6.0 ):
 	plt.colorbar( contourK )
 	
 	# Highlight predictions with a typical printed tendons' rest length
-	# of approximately 10 cm. (Typical in our Summer 2018 experiments).
-	l10 = 10.0 * np.ones( l.shape )
-	plt.plot( a, l10, '--c', label="L=10.0 cm" )
+	# of approximately 9.71 cm. (Typical in our Summer 2018 experiments).
+	l10 = 9.71 * np.ones( l.shape )
+	plt.plot( a, l10, '--c', label="L=9.71 cm" )
 	#plt.legend()	
 	
 
@@ -94,25 +94,26 @@ def main():
 
 	# Linear regression of the empirical data from printed tendon experiments
 	slope, intercept, r_value, p_value, std_err = stats.linregress(empiricalCSA, empiricalStiffness)
-	L_rest = 0.0972
+	L_rest = 0.0971
 	E6 = slope * L_rest
 	rmse = (np.sum(np.mean(np.square(empiricalStiffness - slope*empiricalCSA+intercept))))**0.5
 	rsqLinear   = r_value**2
-	print( "slope =", slope, "MPa/cm" )
-	print( "intercept =", intercept, "N/cm" )
+	print( "slope =", slope, "N/cm**3" )
+	print( "intercept =", intercept, "N/m" )
 	print( "rmse =", rmse )
 	print( "R^2 =", rsqLinear )
 	print( "Regression's E =", E6, "MPa" )
 	kFit = slope * a + intercept
 	
-	# Plot just the 9.72 cm rest length predictions for the empirical and 
+	# Plot just the 9.71 cm rest length predictions for the empirical and 
 	# manufacturer's elastic moduli
-	k6  =   E6 * 10.0**6 / 100.0**2 * np.divide( a, 10.0 )
-	k12 = 12.0 * 10.0**6 / 100.0**2 * np.divide( a, 10.0 )
+	k6  =   E6 * 10.0**6 / 100.0**2 * a / (L_rest*100)
+	k12 = 12.0 * 10.0**6 / 100.0**2 * a / (L_rest*100)
 
 	# Plot the 10 cm rest length predictions
 	plt.plot( a, k12, '-', label="E = 12.0 MPa" )
 	plt.plot( a, k6,  '-', label="E = {0:3.1f} MPa".format(E6) )
+	plt.grid( True )
 	# When including the outlier with stiffness > 50, the Y-intercept becomes noticeably negative:
 	#plt.plot( a, k6,  '-', label="E = {0:3.1f} MPa, intercept 0 N/cm".format(E6) )
 	#plt.plot( a, kFit, '--', label="E = {0:3.1f} MPa, intercept {1:3.1f} N/cm".format(E6, intercept) )
@@ -154,7 +155,7 @@ def main():
 	plt.plot( rho, rho*slope1mm + intercept1mm, '--k', label="1 mm thick: k = {0:3.1f}*density + {1:3.1f}".format(slope1mm, intercept1mm))
 	plt.plot( rho, rho*slope2mm + intercept2mm, '--g', label="2 mm thick: k = {0:3.1f}*density + {1:3.1f}".format(slope2mm, intercept2mm))
 	plt.plot( rho, rho*slope3mm + intercept3mm, '--b', label="3 mm thick: k = {0:3.1f}*density + {1:3.1f}".format(slope3mm, intercept3mm))
-	plt.legend()
+	#plt.legend()
 
 	# Generate response surfaces for manufacturer's reported and empirically derived elastic moduli
 	responseSurface( 12.0 )
