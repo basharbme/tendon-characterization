@@ -1,2 +1,2 @@
-# tendon
-3D printing synthetic tendons
+# tendon-characterization
+Characterizing the stiffness of 3D printed synthetic tendons
