@@ -20,8 +20,8 @@ def responseSurface( e=6.0 ):
 	ecm = eSI / 100.0**2	# converted into N/cm**2
 	
 	# Independent variables: area (cm^2) and rest length (cm)
-	a = np.linspace(0.01, 2.0, num=201)
-	l = np.linspace(2.5, 20.1, num=201)
+	a = np.linspace(0.01, 33.0, num=201)
+	l = np.linspace(2.5, 50.1, num=201)
 	
 	# 2D arrays to aggregate performance metrics
 	A, L = np.meshgrid(a, l )										# for plotting in cm
@@ -29,14 +29,14 @@ def responseSurface( e=6.0 ):
 	# Dependent variable: stiffness
 	# From the equation for Young's Modulus: k = EA/L
 	K = ecm * np.divide( A, L )
-	K[K>500]=500
+	K[K>4000]=4000
 	
 	# Visualize the response surface
 	plt.figure()
 	plt.xlabel("Average cross-sectional area (cm^2)")
 	plt.ylabel("Rest length (cm)")
 	plt.title("Tendon stiffness (N/cm)\nE = {0:4.2f} MPa".format(e))
-	levels=np.linspace(0,500,11)
+	levels=np.linspace(0,4000,11)
 	contourK = plt.contourf( A, L, K, levels )
 	plt.colorbar( contourK )
 	
@@ -53,7 +53,7 @@ def main():
 	printed tendon elastic modulus (6.0 MPa).'''
 	
 	responseSurface( 12.0 )
-	responseSurface( 6.4 )	
+	responseSurface( 6.0 )	
 
 	# Plot just the 10 cm rest length predictions for the empirical and 
 	# manufacturer's elastic moduli
